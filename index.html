@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Členský portál - clen.vzdelanylid.cz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- RETRO AUTENTIZAČNÍ OKNO (ADMIN SERVER v2007) -->
+    <div id="login-container">
+        <div class="window login-window">
+            <div class="window-header">
+                <span class="icon">🔒</span>
+                <span class="title">Admin_Server_VLČR :: Členský portál</span>
+                <div class="window-controls">
+                    <button class="control-btn">_</button>
+                    <button class="control-btn">X</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="login-logo-section">
+                    <div class="logo-text">VZDĚLANÝ LID ČR</div>
+                    <div class="logo-sub">INTERNÍ ČLENSKÝ PORTÁL & EVIDENCE</div>
+                </div>
+                <hr class="office-hr">
+                <form id="login-form" onsubmit="event.preventDefault(); checkLogin();">
+                    <p class="login-instruction">
+                        <strong>Systémové upozornění:</strong> Vstup do této sekce je monitorován a povolen pouze oprávněným členům VLČR. Zadejte své centralizované přístupové heslo.
+                    </p>
+                    <div class="form-group">
+                        <label for="password">Jednotné heslo člena (Password):</label>
+                        <input type="password" id="password" autocomplete="current-password" placeholder="Zadejte heslo..." required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="office-btn btn-primary">Přihlásit se (Login)</button>
+                        <button type="reset" class="office-btn">Storno</button>
+                    </div>
+                </form>
+            </div>
+            <div class="window-footer">
+                <span>Status: IIS/6.0 Secured</span>
+                <span>SSL-Sifrovani: Vypnuto (Interní)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD PORTÁLU (PO PŘIHLÁŠENÍ) -->
+    <div id="portal-container" style="display: none;">
+        <!-- Horní lišta ve stylu Office 2007 / Windows Server -->
+        <div class="office-menu-bar">
+            <div class="menu-item active">Hlavní panel</div>
+            <div class="user-status">
+                Uživatel: <span class="user-badge">Člen VLČR</span> | 
+                <a href="#" onclick="logout()" class="logout-link">Odhlásit (Exit)</a>
+            </div>
+        </div>
+
+        <!-- Hlavní pracovní plocha -->
+        <div class="main-layout">
+            <!-- Levý navigační panel -->
+            <div class="sidebar">
+                <div class="sidebar-block">
+                    <div class="block-header">Rozcestník agendy</div>
+                    <ul class="sidebar-links">
+                        <li><a href="#section-evidence" class="active" onclick="switchTab(this, 'section-evidence')">📋 Hlavní evidence členů</a></li>
+                        <li><a href="#section-propagace" onclick="switchTab(this, 'section-propagace')">📦 Propagační předměty</a></li>
+                        <li><a href="#section-dokumenty" onclick="switchTab(this, 'section-dokumenty')">📝 UPDEJT MAJN</a></li>
+                        <li><a href="#section-credentials" onclick="switchTab(this, 'section-credentials')">🔑 Přístupové údaje / Git</a></li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-block info-block">
+                    <div class="block-header">Informace o serveru</div>
+                    <p><strong>Host:</strong> clen.vzdelanylid.cz</p>
+                    <p><strong>Typ rozhraní:</strong> VLČR software - Interní</p>
+                    <p><strong>Oprávnění:</strong> Čtení + Externí zápis</p>
+                    <p><strong>Kódování:</strong> Windows-1250 / UTF-8</p>
+                </div>
+            </div>
+
+            <!-- Pravá obsahová část -->
+            <div class="content-area">
+                <div class="welcome-banner">
+                    <h1>Administrační a členský portál VLČR</h1>
+                    <p>Vítejte v centralizovaném systému pro správu agendy, evidenci kontaktů a přístupů. Všechny níže uvedené zdroje podléhají interním směrnicím.</p>
+                </div>
+
+                <!-- SEKCE 1: HLAVNÍ EVIDENCE ČLENŮ -->
+                <div id="section-evidence" class="portal-section-content">
+                    <div class="portal-section">
+                        <div class="section-title-bar">
+                            <h2>Hlavní evidence členů (Databáze kontaktů)</h2>
+                        </div>
+                        <div class="section-content">
+                            <!-- Upozornění zadané uživatelem -->
+                            <div class="notice-box info">
+                                <strong>⚠️ DŮLEŽITÉ POKYNY PRO ČLENY:</strong>
+                                <p>Níže zobrazená tabulka obsahuje hlavní evidenci členů. Jedná se o oficiální e-maily a telefonní čísla, která máte <strong>všude povinně používat</strong>, pokud se záležitost jakkoliv týká <strong>VLČR</strong>.</p>
+                                <p style="margin-top: 5px; font-weight: bold;">Pro jakékoliv změny v kontaktech nebo opravu údajů kontaktujte Lukáše Horáka.</p>
+                            </div>
+                            
+                            <!-- Vložená Google tabulka přes Iframe -->
+                            <div class="iframe-container">
+                                <iframe src="https://docs.google.com/spreadsheets/d/1StBr57RYYfv1MVzV-QcaqYQtXsJJi_nNKX4dIJlSoq0/edit?rm=minimal&gid=0#gid=0" allowfullscreen></iframe>
+                            </div>
+                            <div class="iframe-fallback">
+                                <a href="https://docs.google.com/spreadsheets/d/1StBr57RYYfv1MVzV-QcaqYQtXsJJi_nNKX4dIJlSoq0/edit?gid=0#gid=0" target="_blank" class="office-link-btn">Otevřít evidenci v plném okně Prohlížeče ↗</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEKCE 2: PROPAGAČNÍ PŘEDMĚTY -->
+                <div id="section-propagace" class="portal-section-content" style="display:none;">
+                    <div class="portal-section">
+                        <div class="section-title-bar">
+                            <h2>Propagační předměty - Kostky</h2>
+                        </div>
+                        <div class="section-content">
+                            <p class="section-intro-text">Přehled a evidence stavu propagačních materiálů organizace (kostek).</p>
+                            
+                            <table class="office-table">
+                                <thead>
+                                    <tr>
+                                        <th width="35%">Název datového zdroje</th>
+                                        <th width="45%">Typ souboru a umístění</th>
+                                        <th width="20%">Odkaz</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>📦 Propagační předměty: Kostky</strong></td>
+                                        <td>Google Tabulka (Sdílená evidence skladových zásob)</td>
+                                        <td><a href="https://docs.google.com/spreadsheets/d/1dUTbq_dDQ_25LqtpOpR1-UeYLA6LLW1jXnS9HW-tpKc/edit?gid=0#gid=0" target="_blank" class="table-action-btn">Otevřít tabulku ↗</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEKCE 3: UPDEJT MAJN -->
+                <div id="section-dokumenty" class="portal-section-content" style="display:none;">
+                    <div class="portal-section">
+                        <div class="section-title-bar">
+                            <h2>Hlavní dokumentace - UPDEJT MAJN</h2>
+                        </div>
+                        <div class="section-content">
+                            <p class="section-intro-text">Aktuální textový přehled stavu projektů a směřování organizace.</p>
+                            
+                            <table class="office-table">
+                                <thead>
+                                    <tr>
+                                        <th width="35%">Dokument</th>
+                                        <th width="45%">Typ souboru a specifikace</th>
+                                        <th width="20%">Odkaz</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>📝 UPDEJT MAJN</strong></td>
+                                        <td>Google Dokument (Hlavní verze dokumentu t.0)</td>
+                                        <td><a href="https://docs.google.com/document/d/1u6eaJVmOn8KytHjHXkUTxkTuJmnq262_TJBqaUAuHPM/edit?tab=t.0" target="_blank" class="table-action-btn">Otevřít dokument ↗</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEKCE 4: PŘÍSTUPOVÉ ÚDAJE -->
+                <div id="section-credentials" class="portal-section-content" style="display:none;">
+                    <div class="portal-section">
+                        <div class="section-title-bar">
+                            <h2>Globální přístupové údaje & Repozitáře</h2>
+                        </div>
+                        <div class="section-content">
+                            <p class="section-intro-text">Sdílené přihlašovací údaje pro interní platformy a komunikační kanály. Tyto údaje nikde veřejně nepublikujte.</p>
+                            
+                            <div class="credentials-grid">
+                                <!-- GitHub -->
+                                <div class="cred-card">
+                                    <div class="cred-card-header github-theme">🐈 GitHub organizace</div>
+                                    <div class="cred-card-body">
+                                        <table class="cred-table">
+                                            <tr><td><strong>Uživatel (User):</strong></td><td><code class="selectable">chznhs-spec</code></td></tr>
+                                            <tr><td><strong>Heslo (Pass):</strong></td><td><code class="selectable">CVUT_FEL_Edizon</code></td></tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Gmail Hlavní -->
+                                <div class="cred-card">
+                                    <div class="cred-card-header gmail-theme">✉️ Hlavní Gmail (VLČR)</div>
+                                    <div class="cred-card-body">
+                                        <table class="cred-table">
+                                            <tr><td><strong>E-mail:</strong></td><td><code class="selectable">vlcr.hlavni@gmail.com</code></td></tr>
+                                            <tr><td><strong>Heslo (Pass):</strong></td><td><code class="selectable">CVUT_FEL_Edizon</code></td></tr>
+                                        </table>
+                                        <span class="badge badge-primary">Hlavní komunikační uzel</span>
+                                    </div>
+                                </div>
+
+                                <!-- Seznam -->
+                                <div class="cred-card bottleneck-card">
+                                    <div class="cred-card-header seznam-theme">⚠️ Seznam E-mail (BLBÝ)</div>
+                                    <div class="cred-card-body">
+                                        <table class="cred-table">
+                                            <tr><td><strong>E-mail:</strong></td><td><code class="selectable">chznhs@seznam.cz</code></td></tr>
+                                            <tr><td><strong>Heslo (Pass):</strong></td><td><code class="selectable">CVUT_FEL_Edison</code></td></tr>
+                                        </table>
+                                        <div class="bottleneck-warning">
+                                            <strong>Interní poznámka k Seznam účtu:</strong><br>
+                                            Tento účet funguje v naší infrastruktuře momentálně pouze jako <em>bottleneck</em>. Není zcela jasné, z jakého historického důvodu ho stále držíme, a v běžném provozu nám spíše vadí. Používejte jej pouze v nejnutnějších případech.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Spodní stavová lišta ve stylu Windows / Office -->
+        <div class="office-status-bar">
+            <span class="status-item">Server: clen.vzdelanylid.cz</span>
+            <span class="status-item">Šablona rozhraní: Office_Classic_v2007</span>
+            <span class="status-item ready">● Systém připraven</span>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT KONTROLA AUTENTIZACE -->
+    <script>
+        function checkLogin() {
+            var inputPass = document.getElementById("password").value;
+            // Validace hesla určeného uživatelem
+            if (inputPass === "CVUT_FEL_Edizon") {
+                document.getElementById("login-container").style.display = "none";
+                document.getElementById("portal-container").style.display = "flex";
+                sessionStorage.setItem("vlcr_auth_token", "active_session_2007");
+            } else {
+                alert("Přístup odepřen: Zadané jednotné heslo je nesprávné! Zkontrolujte Caps Lock a překlepy.");
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem("vlcr_auth_token");
+            document.getElementById("password").value = "";
+            document.getElementById("portal-container").style.display = "none";
+            document.getElementById("login-container").style.display = "flex";
+        }
+
+        function switchTab(element, sectionId) {
+            // Deaktivace všech odkazů v menu
+            var links = document.querySelectorAll(".sidebar-links a");
+            links.forEach(function(link) {
+                link.classList.remove("active");
+            });
+            
+            // Skrytí všech sekcí
+            var sections = document.querySelectorAll(".portal-section-content");
+            sections.forEach(function(sec) {
+                sec.style.display = "none";
+            });
+            
+            // Aktivace zvoleného tabu
+            element.classList.add("active");
+            document.getElementById(sectionId).style.display = "block";
+        }
+
+        // Automatické přihlášení, pokud relace stále běží
+        window.onload = function() {
+            if (sessionStorage.getItem("vlcr_auth_token") === "active_session_2007") {
+                document.getElementById("login-container").style.display = "none";
+                document.getElementById("portal-container").style.display = "flex";
+            }
+        }
+    </script>
+</body>
+</html>

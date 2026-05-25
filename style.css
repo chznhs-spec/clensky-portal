@@ -1,0 +1,590 @@
+/* ==========================================================================
+   CSS ŠABLONA: ADMINISTRATIVNÍ / OFFICE STYL Z ROKU 2007
+   Navrženo pro: clen.vzdelanylid.cz
+   ========================================================================== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Tahoma", "Verdana", "Segoe UI", Arial, sans-serif;
+    font-size: 11pt;
+    background-color: #a3bad9; /* Klasické modrošedé korporátní pozadí tehdejší doby */
+    color: #000000;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* --- RETRO OKENNÍ DESIGN (Windows Classic / Server / Office look) --- */
+.window {
+    background-color: #f6f9fc;
+    border: 2px solid #6b8cbd;
+    box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.4);
+    border-radius: 4px 4px 0px 0px;
+}
+
+.window-header {
+    background: linear-gradient(to bottom, #7ba4e0 0%, #4a77b4 50%, #315b9c 51%, #4572b2 100%);
+    color: #ffffff;
+    padding: 6px 10px;
+    font-weight: bold;
+    font-size: 9.5pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.6);
+    border-bottom: 1px solid #244273;
+}
+
+.window-header .title {
+    flex-grow: 1;
+    margin-left: 8px;
+    letter-spacing: 0.5px;
+}
+
+.window-controls .control-btn {
+    background: linear-gradient(to bottom, #ffffff 0%, #e0e0e0 100%);
+    border: 1px solid #707070;
+    color: #000000;
+    font-weight: bold;
+    font-size: 8pt;
+    padding: 1px 6px;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-left: 2px;
+}
+.window-controls .control-btn:hover {
+    background: #ffd56b;
+    border-color: #cb9925;
+}
+
+.window-body {
+    padding: 18px;
+}
+
+.window-footer {
+    background-color: #e9f0f8;
+    border-top: 1px solid #a3bad9;
+    padding: 4px 10px;
+    font-size: 8.5pt;
+    color: #445566;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* --- AUTENTIZAČNÍ STRÁNKA (LOGIN SCREEN) --- */
+#login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background: radial-gradient(circle, #e2ecf7 0%, #8ca4c4 100%);
+}
+
+.login-window {
+    width: 480px;
+}
+
+.login-logo-section {
+    text-align: center;
+    padding: 5px 0 10px 0;
+}
+
+.logo-text {
+    font-family: "Times New Roman", Times, Georgia, serif;
+    font-size: 22pt;
+    font-weight: bold;
+    color: #1e395b;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 0px #ffffff;
+}
+
+.logo-sub {
+    font-size: 8.5pt;
+    color: #4f6888;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-top: 4px;
+    letter-spacing: 1.5px;
+}
+
+.office-hr {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, rgba(0,0,0,0), #8ca4c4 50%, rgba(0,0,0,0));
+    margin: 15px 0;
+}
+
+.login-instruction {
+    font-size: 9.5pt;
+    color: #334455;
+    line-height: 1.4;
+    margin-bottom: 18px;
+    background-color: #fffcd1;
+    border: 1px solid #dca842;
+    padding: 10px;
+    border-radius: 2px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    font-size: 9.5pt;
+    color: #1e395b;
+}
+
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 11pt;
+    border: 1px solid #7f9db9;
+    background-color: #ffffff;
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.15);
+}
+.form-group input[type="password"]:focus {
+    border-color: #4a77b4;
+    background-color: #fffff7;
+    outline: none;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 22px;
+}
+
+/* --- OFFICE GLOSSY BUTTONS (Tlačítka s leskem) --- */
+.office-btn {
+    padding: 5px 16px;
+    font-size: 9.5pt;
+    font-family: inherit;
+    color: #000000;
+    background: linear-gradient(to bottom, #ffffff 0%, #f4f4f4 50%, #e6e6e6 51%, #dcdcdc 100%);
+    border: 1px solid #9c9c9c;
+    border-radius: 3px;
+    cursor: pointer;
+    box-shadow: inset 0px 1px 0px #ffffff, 1px 1px 2px rgba(0,0,0,0.1);
+}
+.office-btn:hover {
+    background: linear-gradient(to bottom, #fff8e8 0%, #ffdf9e 50%, #ffcc66 51%, #ffe4a0 100%);
+    border-color: #d69e33;
+}
+.office-btn.btn-primary {
+    font-weight: bold;
+    border-color: #355b8c;
+    background: linear-gradient(to bottom, #e4f0ff 0%, #cbdffd 50%, #a3c4f7 51%, #bccbf7 100%);
+    color: #1e395b;
+}
+.office-btn.btn-primary:hover {
+    background: linear-gradient(to bottom, #ffebd0 0%, #ffc666 50%, #ffaa15 51%, #ffd280 100%);
+    border-color: #cc8000;
+}
+
+/* ==========================================================================
+   PORTÁLOVÝ DASHBOARD LAYOUT (ZOBRAZEN PO PŘIHLÁŠENÍ)
+   ========================================================================== */
+#portal-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    background-color: #ffffff;
+}
+
+/* Horní ovládací panel aplikací */
+.office-menu-bar {
+    background: linear-gradient(to bottom, #f2f7fe 0%, #cbdffd 100%);
+    border-bottom: 1px solid #99bbe8;
+    padding: 3px 5px 0px 5px;
+    display: flex;
+    align-items: flex-end;
+    font-size: 9.5pt;
+    color: #1e395b;
+}
+
+.menu-item {
+    padding: 6px 14px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-bottom: none;
+    margin-right: 2px;
+}
+.menu-item:hover {
+    background-color: #ffe8b3;
+    border-color: #d6a85c;
+    border-radius: 3px 3px 0 0;
+}
+.menu-item.active {
+    font-weight: bold;
+    background-color: #ffffff;
+    border: 1px solid #99bbe8;
+    border-bottom: 1px solid #ffffff;
+    border-radius: 3px 3px 0 0;
+    position: relative;
+    z-index: 2;
+    top: 1px;
+}
+
+.user-status {
+    margin-left: auto;
+    font-size: 9pt;
+    padding-bottom: 6px;
+    padding-right: 10px;
+}
+.user-badge {
+    background-color: #e2ecf7;
+    border: 1px solid #99bbe8;
+    padding: 1px 5px;
+    font-weight: bold;
+    color: #224477;
+    border-radius: 2px;
+}
+.logout-link {
+    color: #cc0000;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 5px;
+}
+.logout-link:hover {
+    text-decoration: underline;
+}
+
+/* Střední rozložení: Sidebar + Obsah */
+.main-layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Levý navigační panel */
+.sidebar {
+    width: 240px;
+    background-color: #dfe8f6;
+    border-right: 1px solid #99bbe8;
+    padding: 12px;
+    overflow-y: auto;
+}
+
+.sidebar-block {
+    background-color: #ffffff;
+    border: 1px solid #a3bad9;
+    border-radius: 3px;
+    margin-bottom: 15px;
+}
+
+.block-header {
+    background: linear-gradient(to bottom, #f0f5fc 0%, #cadbf2 100%);
+    padding: 6px 10px;
+    font-weight: bold;
+    font-size: 9.5pt;
+    color: #1e395b;
+    border-bottom: 1px solid #a3bad9;
+}
+
+.sidebar-links {
+    list-style: none;
+}
+.sidebar-links li a {
+    display: block;
+    padding: 8px 10px;
+    text-decoration: none;
+    color: #222222;
+    font-size: 9.5pt;
+    border-bottom: 1px dotted #d0def0;
+}
+.sidebar-links li a:hover {
+    background-color: #eef4fc;
+    color: #1e395b;
+}
+.sidebar-links li a.active {
+    background-color: #cbdffd;
+    font-weight: bold;
+    color: #1e395b;
+    border-left: 4px solid #4a77b4;
+    padding-left: 6px;
+}
+
+.info-block {
+    padding: 10px;
+    font-size: 9pt;
+}
+.info-block p {
+    margin-bottom: 5px;
+    color: #445566;
+    line-height: 1.3;
+}
+
+/* Hlavní obsahové okno */
+.content-area {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #ffffff;
+}
+
+.welcome-banner {
+    background-color: #f4f8fd;
+    border: 1px solid #b2cbe7;
+    padding: 15px;
+    border-radius: 3px;
+    margin-bottom: 22px;
+}
+.welcome-banner h1 {
+    font-size: 16pt;
+    color: #1e395b;
+    margin-bottom: 6px;
+    font-family: "Georgia", serif;
+}
+.welcome-banner p {
+    font-size: 10pt;
+    color: #556677;
+}
+
+/* Sekce obsahu a panely */
+.portal-section {
+    border: 1px solid #99bbe8;
+    margin-bottom: 20px;
+    border-radius: 3px;
+    background-color: #ffffff;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
+}
+
+.section-title-bar {
+    background: linear-gradient(to bottom, #f0f5fc 0%, #cbdffd 100%);
+    padding: 7px 12px;
+    border-bottom: 1px solid #99bbe8;
+}
+.section-title-bar h2 {
+    font-size: 10.5pt;
+    color: #1e395b;
+    font-weight: bold;
+}
+
+.section-content {
+    padding: 15px;
+}
+
+.section-intro-text {
+    font-size: 10pt;
+    color: #555555;
+    margin-bottom: 15px;
+}
+
+/* Žlutý Notice Box (Upozornění pro členy) */
+.notice-box {
+    padding: 12px;
+    border-radius: 3px;
+    margin-bottom: 16px;
+    font-size: 10pt;
+    line-height: 1.45;
+}
+.notice-box.info {
+    background-color: #fff9d6;
+    border: 1px solid #dca332;
+    color: #4f3600;
+}
+.notice-box.info strong {
+    color: #c00000;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 10.5pt;
+}
+
+/* INTEGRACE GOOGLE TABULKY */
+.iframe-container {
+    border: 1px solid #7f9db9;
+    width: 100%;
+    height: 480px;
+    background-color: #f0f0f0;
+    margin-bottom: 12px;
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.15);
+}
+.iframe-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.iframe-fallback {
+    text-align: right;
+}
+.office-link-btn {
+    display: inline-block;
+    padding: 5px 12px;
+    font-size: 9.5pt;
+    color: #1e395b;
+    text-decoration: none;
+    background-color: #f4f8fd;
+    border: 1px solid #a3bad9;
+    border-radius: 2px;
+    font-weight: bold;
+}
+.office-link-btn:hover {
+    background-color: #cbdffd;
+    border-color: #7ba4e0;
+}
+
+/* --- INTERNÍ STRUKTUROVANÉ TABULKY (Office Style) --- */
+.office-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+    margin: 5px 0;
+}
+.office-table th {
+    background: linear-gradient(to bottom, #f7fafd 0%, #d5e4f5 100%);
+    border: 1px solid #99bbe8;
+    padding: 8px 10px;
+    color: #1e395b;
+    font-weight: bold;
+    text-align: left;
+}
+.office-table td {
+    border: 1px solid #c5d6eb;
+    padding: 10px;
+    background-color: #ffffff;
+    vertical-align: middle;
+}
+.office-table tr:nth-child(even) td {
+    background-color: #f9fbfd;
+}
+
+.table-action-btn {
+    display: inline-block;
+    padding: 4px 10px;
+    background: linear-gradient(to bottom, #ffffff 0%, #ebebeb 100%);
+    border: 1px solid #aaaaaa;
+    color: #333333;
+    text-decoration: none;
+    font-size: 9pt;
+    border-radius: 2px;
+    font-weight: bold;
+}
+.table-action-btn:hover {
+    background: #ffe4ab;
+    border-color: #d6a85c;
+    color: #000000;
+}
+
+/* --- KARTIČKY PŘÍSTUPŮ (GRID & MREŽA) --- */
+.credentials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 16px;
+    margin-top: 5px;
+}
+
+.cred-card {
+    border: 1px solid #a3bad9;
+    background-color: #fbfcfe;
+    border-radius: 3px;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+}
+
+.cred-card-header {
+    padding: 7px 12px;
+    font-weight: bold;
+    font-size: 9.5pt;
+    color: #ffffff;
+    border-radius: 2px 2px 0 0;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+}
+.github-theme { background: linear-gradient(to bottom, #555555 0%, #2b2b2b 100%); }
+.gmail-theme { background: linear-gradient(to bottom, #e2544c 0%, #c12e2a 100%); }
+.seznam-theme { background: linear-gradient(to bottom, #dd1111 0%, #a00000 100%); }
+
+.cred-card-body {
+    padding: 14px;
+    font-size: 9.5pt;
+    flex: 1;
+}
+
+.cred-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.cred-table td {
+    padding: 4px 0;
+    border: none;
+    font-size: 9.5pt;
+}
+.cred-table td:first-child {
+    width: 110px;
+    color: #445566;
+}
+
+code.selectable {
+    font-family: "Consolas", "Monaco", "Courier New", monospace;
+    background-color: #f4f4f4;
+    padding: 2px 6px;
+    border: 1px solid #dddddd;
+    color: #c12e2a;
+    font-size: 10pt;
+    display: inline-block;
+    user-select: all;
+    font-weight: bold;
+}
+
+.badge {
+    display: inline-block;
+    padding: 2px 7px;
+    font-size: 8pt;
+    font-weight: bold;
+    color: #ffffff;
+    border-radius: 2px;
+    margin-top: 10px;
+}
+.badge-primary { background-color: #337ab7; }
+
+/* Komponenta Bottleneck (Pro seznam.cz) */
+.bottleneck-card {
+    border-color: #ebccd1;
+}
+.bottleneck-warning {
+    background-color: #fdf2f2;
+    border: 1px solid #ebccd1;
+    color: #a94442;
+    padding: 10px;
+    margin-top: 12px;
+    font-size: 8.5pt;
+    border-radius: 2px;
+    line-height: 1.45;
+}
+
+/* --- SPODNÍ STAVOVÁ LIŠTA (STATUS BAR) --- */
+.office-status-bar {
+    background-color: #e9f0f8;
+    border-top: 1px solid #99bbe8;
+    padding: 4px 12px;
+    font-size: 8.5pt;
+    color: #445566;
+    display: flex;
+    gap: 25px;
+}
+
+.status-item {
+    border-right: 1px solid #b8cfeb;
+    padding-right: 25px;
+}
+.status-item:last-child {
+    border-right: none;
+    margin-left: auto;
+    padding-right: 0;
+}
+.status-item.ready {
+    font-weight: bold;
+    color: #2b662b;
+}
