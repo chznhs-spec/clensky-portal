@@ -5,10 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Členský portál - clen.vzdelanylid.cz</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .office-input {
+            border: 1px solid #7F9DB9;
+            padding: 3px 5px;
+            font-family: 'Tahoma', sans-serif;
+            font-size: 12px;
+            background: #FFFFFF;
+        }
+        .action-bar {
+            background-color: #E3EFFF;
+            border: 1px solid #99BBE8;
+            padding: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .status-badge {
+            background-color: #E2F0D9;
+            color: #385723;
+            border: 1px solid #C6E0B4;
+            padding: 2px 6px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .loading-text {
+            color: #003399;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+        .scan-button-huge {
+            display: block;
+            background: #ece9d8;
+            border: 2px outset #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+        .scan-button-huge:active {
+            border: 2px inset #fff;
+            background: #e0dcd3;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- RETRO AUTENTIZAČNÍ OKNO (ADMIN SERVER v2007) -->
     <div id="login-container">
         <div class="window login-window">
             <div class="window-header">
@@ -46,20 +93,16 @@
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD PORTÁLU (PO PŘIHLÁŠENÍ) -->
     <div id="portal-container" style="display: none;">
-        <!-- Horní lišta ve stylu Office 2007 / Windows Server -->
         <div class="office-menu-bar">
             <div class="menu-item active">Hlavní panel</div>
             <div class="user-status">
-                Uživatel: <span class="user-badge">Člen VLČR</span> | 
+                Uživatel: <span class="user-badge">Člen VLČR</span> |
                 <a href="#" onclick="logout()" class="logout-link">Odhlásit (Exit)</a>
             </div>
         </div>
 
-        <!-- Hlavní pracovní plocha -->
         <div class="main-layout">
-            <!-- Levý navigační panel -->
             <div class="sidebar">
                 <div class="sidebar-block">
                     <div class="block-header">Rozcestník agendy</div>
@@ -68,6 +111,7 @@
                         <li><a href="#section-propagace" onclick="switchTab(this, 'section-propagace')">📦 Propagační předměty</a></li>
                         <li><a href="#section-dokumenty" onclick="switchTab(this, 'section-dokumenty')">📝 UPDEJT MAJN</a></li>
                         <li><a href="#section-credentials" onclick="switchTab(this, 'section-credentials')">🔑 Přístupové údaje / Git</a></li>
+                        <li><a href="#section-dochazka" onclick="switchTab(this, 'section-dochazka'); refreshData();">⏱️ Docházka a skener</a></li>
                     </ul>
                 </div>
                 
@@ -81,28 +125,24 @@
                 </div>
             </div>
 
-            <!-- Pravá obsahová část -->
             <div class="content-area">
                 <div class="welcome-banner">
                     <h1>Administrační a členský portál VLČR</h1>
                     <p>Vítejte v centralizovaném systému pro správu agendy, evidenci kontaktů a přístupů. Všechny níže uvedené zdroje podléhají interním směrnicím.</p>
                 </div>
 
-                <!-- SEKCE 1: HLAVNÍ EVIDENCE ČLENŮ -->
                 <div id="section-evidence" class="portal-section-content">
                     <div class="portal-section">
                         <div class="section-title-bar">
                             <h2>Hlavní evidence členů (Databáze kontaktů)</h2>
                         </div>
                         <div class="section-content">
-                            <!-- Upozornění zadané uživatelem -->
                             <div class="notice-box info">
                                 <strong>⚠️ DŮLEŽITÉ POKYNY PRO ČLENY:</strong>
                                 <p>Níže zobrazená tabulka obsahuje hlavní evidenci členů. Jedná se o oficiální e-maily a telefonní čísla, která máte <strong>všude povinně používat</strong>, pokud se záležitost jakkoliv týká <strong>VLČR</strong>.</p>
                                 <p style="margin-top: 5px; font-weight: bold;">Pro jakékoliv změny v kontaktech nebo opravu údajů kontaktujte Lukáše Horáka.</p>
                             </div>
                             
-                            <!-- Vložená Google tabulka přes Iframe -->
                             <div class="iframe-container">
                                 <iframe src="https://docs.google.com/spreadsheets/d/1StBr57RYYfv1MVzV-QcaqYQtXsJJi_nNKX4dIJlSoq0/edit?rm=minimal&gid=0#gid=0" allowfullscreen></iframe>
                             </div>
@@ -113,7 +153,6 @@
                     </div>
                 </div>
 
-                <!-- SEKCE 2: PROPAGAČNÍ PŘEDMĚTY -->
                 <div id="section-propagace" class="portal-section-content" style="display:none;">
                     <div class="portal-section">
                         <div class="section-title-bar">
@@ -142,7 +181,6 @@
                     </div>
                 </div>
 
-                <!-- SEKCE 3: UPDEJT MAJN -->
                 <div id="section-dokumenty" class="portal-section-content" style="display:none;">
                     <div class="portal-section">
                         <div class="section-title-bar">
@@ -171,7 +209,6 @@
                     </div>
                 </div>
 
-                <!-- SEKCE 4: PŘÍSTUPOVÉ ÚDAJE -->
                 <div id="section-credentials" class="portal-section-content" style="display:none;">
                     <div class="portal-section">
                         <div class="section-title-bar">
@@ -181,7 +218,6 @@
                             <p class="section-intro-text">Sdílené přihlašovací údaje pro interní platformy a komunikační kanály. Tyto údaje nikde veřejně nepublikujte.</p>
                             
                             <div class="credentials-grid">
-                                <!-- GitHub -->
                                 <div class="cred-card">
                                     <div class="cred-card-header github-theme">🐈 GitHub organizace</div>
                                     <div class="cred-card-body">
@@ -192,7 +228,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Gmail Hlavní -->
                                 <div class="cred-card">
                                     <div class="cred-card-header gmail-theme">✉️ Hlavní Gmail (VLČR)</div>
                                     <div class="cred-card-body">
@@ -204,7 +239,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Seznam -->
                                 <div class="cred-card bottleneck-card">
                                     <div class="cred-card-header seznam-theme">⚠️ Seznam E-mail (BLBÝ)</div>
                                     <div class="cred-card-body">
@@ -222,20 +256,141 @@
                         </div>
                     </div>
                 </div>
+                
+                <div id="section-dochazka" class="portal-section-content" style="display:none;">
+                    <div class="portal-section" style="margin-bottom: 20px;">
+                        <div class="section-title-bar">
+                            <h2>Modul Docházka & Evidence</h2>
+                        </div>
+                        <div class="section-content">
+                            <a href="dochazka/skenovadlo.html" target="_blank" class="scan-button-huge">
+                                📷 SPUSTIT EXTERNÍ SKENER (Otevře se v novém okně)
+                            </a>
+                            
+                            <div class="action-bar" style="margin-bottom: 15px;">
+                                <button onclick="refreshData()" class="office-btn btn-primary">🔄 Obnovit data ze serveru</button>
+                                <span>Aktualizujte data pro zobrazení nejnovějších přehledů.</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="portal-section" style="margin-bottom: 20px;">
+                        <div class="section-title-bar">
+                            <h2>📍 Kdo je kde teď (Real-time monitoring)</h2>
+                        </div>
+                        <div class="section-content">
+                            <table class="office-table" id="table-aktualni">
+                                <thead>
+                                    <tr>
+                                        <th width="20%">Členské ID</th>
+                                        <th width="40%">Lokalita / Stanoviště</th>
+                                        <th width="25%">Čas příchodu</th>
+                                        <th width="15%">Stav</th>
+                                    </tr>
+                                </thead>
+                                <tbody><tr><td colspan="4" class="loading-text">Čekám na stažení dat...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="portal-section" style="margin-bottom: 20px;">
+                        <div class="section-title-bar">
+                            <h2>🏰 Historie podle lokality</h2>
+                        </div>
+                        <div class="section-content">
+                            <div style="margin-bottom: 10px;">
+                                <label><strong>Filtr lokality:</strong></label>
+                                <select id="hist-location-select" onchange="renderLocationHistory()" class="office-input">
+                                    <option value="VLČR - Nad Tejnkou">VLČR - Nad Tejnkou</option>
+                                    <option value="VLČR - Markvartka">VLČR - Markvartka</option>
+                                    <option value="ČVUT FEL">ČVUT FEL</option>
+                                    <option value="ČVUT FJFI">ČVUT FJFI</option>
+                                    <option value="NTK">NTK</option>
+                                    <option value="Edizon kroužek">Edizon kroužek</option>
+                                    <option value="Jiné">Jiné</option>
+                                </select>
+                            </div>
+                            <table class="office-table" id="table-mista">
+                                <thead>
+                                    <tr>
+                                        <th width="20%">Datum</th>
+                                        <th width="20%">Členské ID</th>
+                                        <th width="30%">Příchod</th>
+                                        <th width="30%">Odchod</th>
+                                    </tr>
+                                </thead>
+                                <tbody><tr><td colspan="4" class="loading-text">Čekám na stažení dat...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="portal-section" style="margin-bottom: 20px;">
+                        <div class="section-title-bar">
+                            <h2>👤 Osobní historie člena</h2>
+                        </div>
+                        <div class="section-content">
+                            <div style="margin-bottom: 10px;">
+                                <label><strong>Hledat ID:</strong></label>
+                                <input type="text" id="hist-member-input" placeholder="Např. 2" class="office-input">
+                                <button onclick="renderMemberHistory()" class="office-btn">Vyhledat v databázi</button>
+                            </div>
+                            <table class="office-table" id="table-clenove">
+                                <thead>
+                                    <tr>
+                                        <th width="20%">Datum</th>
+                                        <th width="35%">Místo / Vchod</th>
+                                        <th width="20%">Příchod</th>
+                                        <th width="25%">Odchod</th>
+                                    </tr>
+                                </thead>
+                                <tbody><tr><td colspan="4" class="loading-text">Zadejte ID člena...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="portal-section">
+                        <div class="section-title-bar">
+                            <h2>🗄️ Backend datového zdroje</h2>
+                        </div>
+                        <div class="section-content">
+                            <p class="section-intro-text">Odkaz na zdrojovou Google tabulku modulu Docházka.</p>
+                            
+                            <table class="office-table">
+                                <thead>
+                                    <tr>
+                                        <th width="35%">Název datového zdroje</th>
+                                        <th width="45%">Typ souboru a umístění</th>
+                                        <th width="20%">Odkaz</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Backend - Google sheets</td>
+                                        <td>Google Tabulka (Zdroj dat)</td>
+                                        <td><a href="https://docs.google.com/spreadsheets/d/1u0VpIXrnZkOkiNWPe1vu6tGc8HIQNSz1R4YKpzM6Q1I/edit?usp=sharing" target="_blank" class="table-action-btn">Otevřít tabulku ↗</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
 
             </div>
         </div>
 
-        <!-- Spodní stavová lišta ve stylu Windows / Office -->
         <div class="office-status-bar">
             <span class="status-item">Server: clen.vzdelanylid.cz</span>
             <span class="status-item">Šablona rozhraní: Office_Classic_v2007</span>
-            <span class="status-item ready">● Systém připraven</span>
+            <span class="status-item ready" id="system-status">● Systém připraven</span>
         </div>
     </div>
 
-    <!-- JAVASCRIPT KONTROLA AUTENTIZACE -->
     <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOYaYaCUccOTxAuX4YSwbSV1jH_DroxFABUl4R_Zl4G99GD5awhyZ2qsscy_BW-AJy/exec";
+        let globalData = [];
+        let isDataLoaded = false;
+
         function checkLogin() {
             var inputPass = document.getElementById("password").value;
             // Validace hesla určeného uživatelem
@@ -279,6 +434,65 @@
                 document.getElementById("login-container").style.display = "none";
                 document.getElementById("portal-container").style.display = "flex";
             }
+        }
+        
+        // --- LOGIKA DOCHÁZKY ---
+        function refreshData() {
+            document.getElementById("system-status").innerText = "⚙️ Stahování dat...";
+            document.getElementById("system-status").style.color = "blue";
+            
+            fetch(`${SCRIPT_URL}?action=getData`)
+                .then(res => res.json())
+                .then(resData => {
+                    if (resData.status === "success") {
+                        globalData = resData.data;
+                        isDataLoaded = true;
+                        renderCurrentPresence();
+                        renderLocationHistory();
+                        document.getElementById("system-status").innerText = "● Data synchronizována";
+                        document.getElementById("system-status").style.color = "green";
+                    }
+                })
+                .catch(err => {
+                    document.getElementById("system-status").innerText = "❌ Chyba připojení";
+                    document.getElementById("system-status").style.color = "red";
+                });
+        }
+
+        function renderCurrentPresence() {
+            if (!isDataLoaded) return;
+            const tbody = document.querySelector('#table-aktualni tbody');
+            const activeMembers = {};
+            globalData.forEach(row => {
+                if (row.checkIn && !row.checkOut) activeMembers[row.memberId] = { location: row.location, time: row.checkIn };
+                else if (row.checkIn && row.checkOut && activeMembers[row.memberId]?.time === row.checkIn) delete activeMembers[row.memberId];
+            });
+            const keys = Object.keys(activeMembers);
+            if (keys.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Všichni jsou odhlášeni.</td></tr>`;
+            tbody.innerHTML = keys.map(id => `<tr><td><strong>${id}</strong></td><td>${activeMembers[id].location}</td><td>${activeMembers[id].time}</td><td><span class="status-badge">AKTIVNÍ</span></td></tr>`).join('');
+        }
+
+        function renderLocationHistory() {
+            if (!isDataLoaded) return;
+            const selectedLoc = document.getElementById('hist-location-select').value;
+            const tbody = document.querySelector('#table-mista tbody');
+            const filtered = globalData.filter(row => row.location === selectedLoc).reverse();
+            if (filtered.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Žádné záznamy.</td></tr>`;
+            tbody.innerHTML = filtered.map(row => `<tr><td>${row.datum}</td><td><strong>${row.memberId}</strong></td><td style="color: green;">${row.checkIn || '--:--'}</td><td style="color: ${row.checkOut?'maroon':'gray'};">${row.checkOut || 'probíhá'}</td></tr>`).join('');
+        }
+
+        function renderMemberHistory() {
+            if (!isDataLoaded) return alert("Nejprve stáhněte data (Obnovit).");
+            const searchId = document.getElementById('hist-member-input').value.trim();
+            const tbody = document.querySelector('#table-clenove tbody');
+            if (!searchId) return;
+            const normSearchId = isNaN(searchId) ? searchId : String(Number(searchId));
+            const filtered = globalData.filter(row => {
+                const normRowId = isNaN(row.memberId) ? row.memberId : String(Number(row.memberId));
+                return normRowId === normSearchId;
+            }).reverse();
+            if (filtered.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Nenalezeno.</td></tr>`;
+            tbody.innerHTML = filtered.map(row => `<tr><td>${row.datum}</td><td>${row.location}</td><td style="color: green;">${row.checkIn || '--:--'}</td><td>${row.checkOut ? `<span style="color: maroon;">${row.checkOut}</span>` : 'NEODHLÁŠEN'}</td></tr>`).join('');
         }
     </script>
 </body>
