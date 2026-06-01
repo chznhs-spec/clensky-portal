@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VLČR - Záznamový Terminál</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        body { font-family: monospace; background-color: #e0e0e0; color: #000; padding: 10px; }
+        .container { max-width: 500px; margin: 0 auto; background: #fff; border: 2px solid #000; padding: 10px; }
+        h1 { font-size: 18px; text-transform: uppercase; border-bottom: 1px solid #000; margin-top: 0; padding-bottom: 5px; }
+        select, button { font-family: monospace; font-size: 16px; padding: 10px; width: 100%; margin-bottom: 10px; border: 1px solid #000; background: #d4d0c8; cursor: pointer; }
+        #reader { width: 100%; border: 2px dashed #000; min-height: 250px; background: #000; margin-bottom: 10px; }
+        #status-box { border: 1px solid #000; padding: 10px; background: #ffd; font-weight: bold; text-align: center; }
+        .success { background: #9f9 !important; }
+        .error { background: #f99 !important; }
+        .warning { background: #fc9 !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>SYS_SKENER // VLČR</h1>
+    
+    <label>Lokalizace / Stanoviště:</label>
+    <select id="location">
+        <option value="VLČR - Nad Tejnkou">VLČR - Nad Tejnkou</option>
+        <option value="VLČR - Markvartka">VLČR - Markvartka</option>
+        <option value="ČVUT FEL">ČVUT FEL</option>
+        <option value="ČVUT FJFI">ČVUT FJFI</option>
+        <option value="NTK">NTK</option>
+        <option value="Edizon kroužek">Edizon kroužek</option>
+        <option value="Jiné">Jiné</option>
+    </select>
+    
+    <label>Dostupné kamery:</label>
+    <select id="camera-select"><option value="">(Klikněte na Inicializovat)</option></select>
+
+    <button id="init-btn" onclick="initCameras()">INICIALIZOVAT KAMERY (Vyžádá práva)</button>
+    <button id="start-btn" onclick="startScanner()" style="display:none;">ZAPNOUT KAMERU [START]</button>
+    <button id="stop-btn" onclick="stopScanner()" style="display:none;">VYPNOUT KAMERU [STOP]</button>
+
+    <div id="reader"></div>
+    <div id="status-box">SYSTEM READY. Čekám na inicializaci...</div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOYaYaCUccOTxAuX4YSwbSV1jH_DroxFABUl4R_Zl4G99GD5awhyZ2qsscy_BW-AJy/exec";
+    let html5QrcodeScanner;
+    
+    let isScanningLocked = false;
+    let lastScannedCode = "";
+    let lastScannedTime = 0;
+
+    function setStatus(text, type) {
+        const box = document.getElementById("status-box");
+        box.innerText = text;
+        box.className = type || "";
+    }
+
+    function playBeep() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(900, ctx.currentTime);
+            osc.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.08);
+        } catch(e) {}
+    }
+
+    async function initCameras() {
+        setStatus("Žádám o přístup k hardwaru...", "");
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            stream.getTracks().forEach(track => track.stop());
+            
+            const devices = await Html5Qrcode.getCameras();
+            if (devices && devices.length > 0) {
+                const camSelect = document.getElementById("camera-select");
+                camSelect.innerHTML = "";
+                devices.forEach(d => {
+                    const opt = document.createElement("option");
+                    opt.value = d.id;
+                    opt.text = d.label || `Kamera ${d.id}`;
+                    camSelect.appendChild(opt);
+                });
+                document.getElementById("init-btn").style.display = "none";
+                document.getElementById("start-btn").style.display = "block";
+                setStatus("Kamery načteny. Stiskněte START.", "success");
+            }
+        } catch (err) {
+            setStatus("CHYBA: Přístup zamítnut.", "error");
+        }
+    }
+
+    function startScanner() {
+        const camId = document.getElementById("camera-select").value;
+        html5QrcodeScanner = new Html5Qrcode("reader");
+        
+        const config = { 
+            fps: 15, 
+            qrbox: { width: 300, height: 200 },
+            formatsToSupport: [ 
+                Html5QrcodeSupportedFormats.CODE_128,
+                Html5QrcodeSupportedFormats.CODE_39,
+                Html5QrcodeSupportedFormats.EAN_13
+            ],
+            experimentalFeatures: {
+                useBarCodeDetectorIfSupported: true
+            }
+        };
+        
+        html5QrcodeScanner.start(
+            camId, 
+            config, 
+            (decodedText) => {
+                const now = Date.now();
+                
+                // Základní očištění textu
+                let cleanedCode = decodedText.replace(/[\u0000-\u001F\u007F-\u009F@"]/g, "").trim();
+                if (!cleanedCode) return;
+
+                // --- NOVÝ FILTR: Akceptujeme POUZE přesně 4 číslice ---
+                if (!/^\d{4}$/.test(cleanedCode)) {
+                    setStatus(`Ignorován špatný formát: ${cleanedCode}`, "warning");
+                    return;
+                }
+
+                // --- VYLEPŠENÍ: Ochrana před double-scanem s vizuálním potvrzením ID ---
+                if (cleanedCode === lastScannedCode && (now - lastScannedTime) < 6000) {
+                    setStatus(`Opakované pípnutí (ID: ${cleanedCode} již uloženo)`, "warning");
+                    return;
+                }
+
+                if (isScanningLocked) return;
+                isScanningLocked = true;
+                
+                lastScannedCode = cleanedCode;
+                lastScannedTime = now;
+
+                playBeep();
+                sendData(cleanedCode);
+            }
+        ).catch(err => {
+            setStatus("CHYBA: Kameru se nepodařilo spustit.", "error");
+        });
+
+        document.getElementById("start-btn").style.display = "none";
+        document.getElementById("stop-btn").style.display = "block";
+        setStatus("SKENUJEM...", "");
+    }
+
+    function stopScanner() {
+        if(html5QrcodeScanner) {
+            html5QrcodeScanner.stop().then(() => {
+                document.getElementById("start-btn").style.display = "block";
+                document.getElementById("stop-btn").style.display = "none";
+                setStatus("Kamera vypnuta.", "");
+            });
+        }
+    }
+
+    function sendData(id) {
+        const loc = document.getElementById("location").value;
+        setStatus(`Odesílám ID ${id}...`, "");
+        
+        fetch(`${SCRIPT_URL}?id=${encodeURIComponent(id)}&zarizeni=${encodeURIComponent(loc)}`)
+            .then(res => res.json())
+            .then(data => {
+                setStatus(data.message || `Uloženo! (ID: ${id})`, "success");
+                
+                setTimeout(() => {
+                    isScanningLocked = false;
+                    setStatus("SKENUJEM...", "");
+                }, 2500);
+            })
+            .catch(() => {
+                setStatus(`CHYBA při odesílání ID ${id}`, "error");
+                setTimeout(() => {
+                    isScanningLocked = false;
+                    setStatus("SKENUJEM...", "");
+                }, 2500);
+            });
+    }
+</script>
+</body>
+</html>
