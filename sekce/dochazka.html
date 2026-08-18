@@ -1,0 +1,115 @@
+<div class="portal-section" style="margin-bottom: 20px;">
+    <div class="section-title-bar">
+        <h2>Modul Docházka & Evidence</h2>
+    </div>
+    <div class="section-content">
+        <a href="dochazka/skenovadlo.html" target="_blank" class="scan-button-huge">
+            📷 SPUSTIT EXTERNÍ SKENER (Otevře se v novém okně)
+        </a>
+        
+        <div class="action-bar" style="margin-bottom: 15px;">
+            <button onclick="refreshData()" class="office-btn btn-primary">🔄 Obnovit data ze serveru</button>
+            <span>Aktualizujte data pro zobrazení nejnovějších přehledů.</span>
+        </div>
+    </div>
+</div>
+
+<div class="portal-section" style="margin-bottom: 20px;">
+    <div class="section-title-bar">
+        <h2>📍 Kdo je kde teď (Real-time monitoring)</h2>
+    </div>
+    <div class="section-content">
+        <table class="office-table" id="table-aktualni">
+            <thead>
+                <tr>
+                    <th width="20%">Členské ID</th>
+                    <th width="40%">Lokalita / Stanoviště</th>
+                    <th width="25%">Čas příchodu</th>
+                    <th width="15%">Stav</th>
+                </tr>
+            </thead>
+            <tbody><tr><td colspan="4" class="loading-text">Čekám na stažení dat...</td></tr></tbody>
+        </table>
+    </div>
+</div>
+
+<div class="portal-section" style="margin-bottom: 20px;">
+    <div class="section-title-bar">
+        <h2>🏰 Historie podle lokality</h2>
+    </div>
+    <div class="section-content">
+        <div style="margin-bottom: 10px;">
+            <label><strong>Filtr lokality:</strong></label>
+            <select id="hist-location-select" onchange="renderLocationHistory()" class="office-input">
+                <option value="VLČR - Nad Tejnkou">VLČR - Nad Tejnkou</option>
+                <option value="VLČR - Markvartka">VLČR - Markvartka</option>
+                <option value="ČVUT FEL">ČVUT FEL</option>
+                <option value="ČVUT FJFI">ČVUT FJFI</option>
+                <option value="NTK">NTK</option>
+                <option value="Edizon kroužek">Edizon kroužek</option>
+                <option value="Jiné">Jiné</option>
+            </select>
+        </div>
+        <table class="office-table" id="table-mista">
+            <thead>
+                <tr>
+                    <th width="20%">Datum</th>
+                    <th width="20%">Členské ID</th>
+                    <th width="30%">Příchod</th>
+                    <th width="30%">Odchod</th>
+                </tr>
+            </thead>
+            <tbody><tr><td colspan="4" class="loading-text">Čekám na stažení dat...</td></tr></tbody>
+        </table>
+    </div>
+</div>
+
+<div class="portal-section" style="margin-bottom: 20px;">
+    <div class="section-title-bar">
+        <h2>👤 Osobní historie člena</h2>
+    </div>
+    <div class="section-content">
+        <div style="margin-bottom: 10px;">
+            <label><strong>Hledat ID:</strong></label>
+            <input type="text" id="hist-member-input" placeholder="Např. 2" class="office-input">
+            <button onclick="renderMemberHistory()" class="office-btn">Vyhledat v databázi</button>
+        </div>
+        <table class="office-table" id="table-clenove">
+            <thead>
+                <tr>
+                    <th width="20%">Datum</th>
+                    <th width="35%">Místo / Vchod</th>
+                    <th width="20%">Příchod</th>
+                    <th width="25%">Odchod</th>
+                </tr>
+            </thead>
+            <tbody><tr><td colspan="4" class="loading-text">Zadejte ID člena...</td></tr></tbody>
+        </table>
+    </div>
+</div>
+
+<div class="portal-section">
+    <div class="section-title-bar">
+        <h2>🗄️ Backend datového zdroje</h2>
+    </div>
+    <div class="section-content">
+        <p class="section-intro-text">Odkaz na zdrojovou Google tabulku modulu Docházka.</p>
+        
+        <table class="office-table">
+            <thead>
+                <tr>
+                    <th width="35%">Název datového zdroje</th>
+                    <th width="45%">Typ souboru a umístění</th>
+                    <th width="20%">Odkaz</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Backend - Google sheets</td>
+                    <td>Google Tabulka (Zdroj dat)</td>
+                    <td><a href="https://docs.google.com/spreadsheets/d/1u0VpIXrnZkOkiNWPe1vu6tGc8HIQNSz1R4YKpzM6Q1I/edit?usp=sharing" target="_blank" class="table-action-btn">Otevřít tabulku ↗</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
