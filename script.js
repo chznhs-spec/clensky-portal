@@ -131,3 +131,189 @@ function renderMemberHistory() {
     if (filtered.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Nenalezeno.</td></tr>`;
     tbody.innerHTML = filtered.map(row => `<tr><td>${row.datum}</td><td>${row.location}</td><td style="color: green;">${row.checkIn || '--:--'}</td><td>${row.checkOut ? `<span style="color: maroon;">${row.checkOut}</span>` : 'NEODHLÁŠEN'}</td></tr>`).join('');
 }
+
+async function submitRepreData() {
+    const clenyInput = document.getElementById("repre-cleny");
+    const mistoInput = document.getElementById("repre-misto");
+    const btn = document.getElementById("repre-submit-btn");
+    const status = document.getElementById("repre-status");
+
+    if (!clenyInput || !mistoInput) return;
+
+    // Kontrola povinných polí
+    if (!clenyInput.value.trim() || !mistoInput.value.trim()) {
+        alert("Prosím vyplňte členy týmu a místo lokality!");
+        return;
+    }
+
+    btn.disabled = true;
+    status.style.color = "#333";
+    status.innerText = "⏳ Ukládám záznam...";
+
+    const payload = {
+        cleny: clenyInput.value,
+        misto: mistoInput.value,
+        jmeno: document.getElementById("repre-jmeno").value,
+        kontakt: document.getElementById("repre-kontakt").value,
+        obor: document.getElementById("repre-obor").value,
+        poznamka: document.getElementById("repre-poznamka").value
+    };
+
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwnqtPqfXMjdj1gH2K-viT9pU_KM9Nh44XeZ1uMzGpXVdUqpwlumVqy_yJndv8OjxugAw/exec";
+
+    try {
+        await fetch(scriptURL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        status.style.color = "green";
+        status.innerText = "✅ Záznam byl úspěšně uložen do Google Tabulky!";
+        document.getElementById("repre-form").reset();
+    } catch (err) {
+        status.style.color = "red";
+        status.innerText = "❌ Chyba při uložení: " + err.message;
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+let allRepreData = []; // Globální proměnná pro ukládání načtených dat
+
+// 1. Odeslání nového záznamu
+async function submitRepreData() {
+    const clenyInput = document.getElementById("repre-cleny");
+    const mistoInput = document.getElementById("repre-misto");
+    const btn = document.getElementById("repre-submit-btn");
+    const status = document.getElementById("repre-status");
+
+    if (!clenyInput || !mistoInput) return;
+    
+    if (!clenyInput.value.trim() || !mistoInput.value.trim()) {
+        alert("Prosím vyplňte členy týmu a místo lokality!");
+        return;
+    }
+
+    btn.disabled = true;
+    status.style.color = "#333";
+    status.innerText = "⏳ Ukládám záznam...";
+
+    const payload = {
+        cleny: clenyInput.value,
+        misto: mistoInput.value,
+        jmeno: document.getElementById("repre-jmeno").value,
+        kontakt: document.getElementById("repre-kontakt").value,
+        obor: document.getElementById("repre-obor").value,
+        hodnoceni: document.getElementById("repre-hodnoceni").value,
+        poznamka: document.getElementById("repre-poznamka").value
+    };
+
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwnqtPqfXMjdj1gH2K-viT9pU_KM9Nh44XeZ1uMzGpXVdUqpwlumVqy_yJndv8OjxugAw/exec";
+
+    try {
+        await fetch(scriptURL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        status.style.color = "green";
+        status.innerText = "✅ Záznam byl úspěšně uložen do Google Tabulky!";
+        document.getElementById("repre-form").reset();
+        
+        // Obnovíme tabulku po 1.5 sekundě
+        setTimeout(loadRepreData, 1500);
+    } catch (err) {
+        status.style.color = "red";
+        status.innerText = "❌ Chyba při uložení: " + err.message;
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+// 2. Načtení dat z Google Sheets
+async function loadRepreData() {
+    const tbody = document.getElementById("repre-table-body");
+    if (!tbody) return;
+
+    tbody.innerHTML = '<tr><td colspan="7" style="padding: 15px; text-align: center; color: #666;">⏳ Načítám data z databáze...</td></tr>';
+
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwnqtPqfXMjdj1gH2K-viT9pU_KM9Nh44XeZ1uMzGpXVdUqpwlumVqy_yJndv8OjxugAw/exec";
+
+    try {
+        const response = await fetch(scriptURL);
+        allRepreData = await response.json();
+        filterRepreTable(); // Vykreslení dat
+    } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="7" style="padding: 15px; text-align: center; color: red;">❌ Chyba při načítání dat. Zkontrolujte připojení.</td></tr>';
+    }
+}
+
+// 3. Filtrování, vyhledávání a řazení dat v tabulce
+function filterRepreTable() {
+    const tbody = document.getElementById("repre-table-body");
+    if (!tbody || !allRepreData) return;
+
+    const searchValue = document.getElementById("repre-search").value.toLowerCase();
+    const ratingFilter = document.getElementById("repre-filter-rating").value;
+    const sortBy = document.getElementById("repre-sort").value;
+
+    // Filtrování
+    let filtered = allRepreData.filter(item => {
+        const matchesSearch = (item.jmeno || "").toLowerCase().includes(searchValue) ||
+                              (item.kontakt || "").toLowerCase().includes(searchValue) ||
+                              (item.misto || "").toLowerCase().includes(searchValue) ||
+                              (item.obor || "").toLowerCase().includes(searchValue) ||
+                              (item.poznamka || "").toLowerCase().includes(searchValue);
+
+        const matchesRating = ratingFilter === "all" || String(item.hodnoceni) === ratingFilter;
+
+        return matchesSearch && matchesRating;
+    });
+
+    // Řazení
+    filtered.sort((a, b) => {
+        if (sortBy === "name-asc") return (a.jmeno || "").localeCompare(b.jmeno || "");
+        if (sortBy === "name-desc") return (b.jmeno || "").localeCompare(a.jmeno || "");
+        if (sortBy === "rating-asc") return Number(a.hodnoceni || 3) - Number(b.hodnoceni || 3);
+        return 0; // "date-desc" zůstává v pořadí z tabulky
+    });
+
+    // Vykreslení do HTML
+    if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="padding: 15px; text-align: center; color: #888;">Žádné záznamy neodpovídají filtru.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = filtered.map(item => {
+        // Formátování odznaku podle hodnocení
+        let ratingBadge = `<span style="background: #28a745; color: white; padding: 3px 6px; border-radius: 3px; font-weight: bold;">⭐ 1 (Top)</span>`;
+        if (String(item.hodnoceni) === "2") {
+            ratingBadge = `<span style="background: #ffc107; color: black; padding: 3px 6px; border-radius: 3px; font-weight: bold;">⭐ 2 (Střed)</span>`;
+        } else if (String(item.hodnoceni) === "3") {
+            ratingBadge = `<span style="background: #dc3545; color: white; padding: 3px 6px; border-radius: 3px; font-weight: bold;">⭐ 3 (Slabé)</span>`;
+        }
+
+        return `
+            <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 8px;">${ratingBadge}</td>
+                <td style="padding: 8px; font-weight: bold;">${item.jmeno || '-'}</td>
+                <td style="padding: 8px;">${item.kontakt || '-'}</td>
+                <td style="padding: 8px;">${item.obor || '-'}</td>
+                <td style="padding: 8px;">${item.misto || '-'}</td>
+                <td style="padding: 8px; color: #555;">${item.cleny || '-'}</td>
+                <td style="padding: 8px; font-style: italic;">${item.poznamka || '-'}</td>
+            </tr>
+        `;
+    }).join("");
+}
+
+// Automatické načtení dat při přechodu do sekce reprezentace
+// (zavolejte loadRepreData() uvnitř vaší existující funkce loadSection('reprezentace'))
