@@ -261,43 +261,47 @@ function filterRepreTable() {
     const tbody = document.getElementById("repre-table-body");
     if (!tbody || !allRepreData) return;
 
-    const searchValue = document.getElementById("repre-search").value.toLowerCase();
-    const ratingFilter = document.getElementById("repre-filter-rating").value;
-    const sortBy = document.getElementById("repre-sort").value;
+    const searchValue = (document.getElementById("repre-search")?.value || "").toLowerCase().trim();
+    const ratingFilter = document.getElementById("repre-filter-rating")?.value || "all";
+    const sortBy = document.getElementById("repre-sort")?.value || "date-desc";
 
-    // Filtrování
+    // Filtrování dat
     let filtered = allRepreData.filter(item => {
-        const matchesSearch = (item.jmeno || "").toLowerCase().includes(searchValue) ||
-                              (item.kontakt || "").toLowerCase().includes(searchValue) ||
-                              (item.misto || "").toLowerCase().includes(searchValue) ||
-                              (item.obor || "").toLowerCase().includes(searchValue) ||
-                              (item.poznamka || "").toLowerCase().includes(searchValue);
+        const matchesSearch = !searchValue || 
+            String(item.jmeno || "").toLowerCase().includes(searchValue) ||
+            String(item.kontakt || "").toLowerCase().includes(searchValue) ||
+            String(item.misto || "").toLowerCase().includes(searchValue) ||
+            String(item.obor || "").toLowerCase().includes(searchValue) ||
+            String(item.poznamka || "").toLowerCase().includes(searchValue);
 
-        const matchesRating = ratingFilter === "all" || String(item.hodnoceni) === ratingFilter;
+        // Převedení obou hodnot na řetězec pro spolehlivé porovnání
+        const itemRating = String(item.hodnoceni).trim();
+        const matchesRating = ratingFilter === "all" || itemRating === String(ratingFilter);
 
         return matchesSearch && matchesRating;
     });
 
-    // Řazení
+    // Řazení dat
     filtered.sort((a, b) => {
-        if (sortBy === "name-asc") return (a.jmeno || "").localeCompare(b.jmeno || "");
-        if (sortBy === "name-desc") return (b.jmeno || "").localeCompare(a.jmeno || "");
+        if (sortBy === "name-asc") return String(a.jmeno || "").localeCompare(String(b.jmeno || ""));
+        if (sortBy === "name-desc") return String(b.jmeno || "").localeCompare(String(a.jmeno || ""));
         if (sortBy === "rating-asc") return Number(a.hodnoceni || 3) - Number(b.hodnoceni || 3);
-        return 0; // "date-desc" zůstává v pořadí z tabulky
+        return 0;
     });
 
-    // Vykreslení do HTML
+    // Vykreslení do tabulky
     if (filtered.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" style="padding: 15px; text-align: center; color: #888;">Žádné záznamy neodpovídají filtru.</td></tr>';
         return;
     }
 
     tbody.innerHTML = filtered.map(item => {
-        // Formátování odznaku podle hodnocení
+        const val = String(item.hodnoceni).trim();
         let ratingBadge = `<span style="background: #28a745; color: white; padding: 3px 6px; border-radius: 3px; font-weight: bold;">⭐ 1 (Top)</span>`;
-        if (String(item.hodnoceni) === "2") {
+        
+        if (val === "2") {
             ratingBadge = `<span style="background: #ffc107; color: black; padding: 3px 6px; border-radius: 3px; font-weight: bold;">⭐ 2 (Střed)</span>`;
-        } else if (String(item.hodnoceni) === "3") {
+        } else if (val === "3") {
             ratingBadge = `<span style="background: #dc3545; color: white; padding: 3px 6px; border-radius: 3px; font-weight: bold;">⭐ 3 (Slabé)</span>`;
         }
 
