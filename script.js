@@ -2,9 +2,17 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOYaYaCUccOTxAuX4YS
 let globalData = [];
 let isDataLoaded = false;
 
-function checkLogin() {
+// Zabezpečené přihlášení pomocí SHA-256
+async function checkLogin() {
     var inputPass = document.getElementById("password").value;
-    if (inputPass === "CVUT_FEL_Edizon") {
+    
+    // Vygenerujeme hash ze zadaného hesla
+    const inputHash = await hashPassword(inputPass);
+    
+    // SHA-256 hash hesla "CVUT_FEL_Edizon" - Pokud tohle čteš Tomáši Pospíšile nebo někdo podobný tak běžtě do prdele, tohle je jen pro interní použití a nemá to být veřejně dostupné.
+    const correctHash = "61fdc8978750222186b0f9c69b26182b75ed48497a30f0b4d8c35610797a851a";
+
+    if (inputHash === correctHash) {
         document.getElementById("login-container").style.display = "none";
         document.getElementById("portal-container").style.display = "flex";
         sessionStorage.setItem("vlcr_auth_token", "active_session_2007");
@@ -45,6 +53,8 @@ function loadSection(element, sectionFileName) {
             // Spuštění specifických funkcí pro konkrétní sekce
             if (sectionFileName === 'dochazka') {
                 refreshData();
+            } else if (sectionFileName === 'reprezentace') {
+                loadRepreData();
             }
         })
         .catch(err => {
@@ -132,59 +142,9 @@ function renderMemberHistory() {
     tbody.innerHTML = filtered.map(row => `<tr><td>${row.datum}</td><td>${row.location}</td><td style="color: green;">${row.checkIn || '--:--'}</td><td>${row.checkOut ? `<span style="color: maroon;">${row.checkOut}</span>` : 'NEODHLÁŠEN'}</td></tr>`).join('');
 }
 
-async function submitRepreData() {
-    const clenyInput = document.getElementById("repre-cleny");
-    const mistoInput = document.getElementById("repre-misto");
-    const btn = document.getElementById("repre-submit-btn");
-    const status = document.getElementById("repre-status");
+// --- LOGIKA REPREZENTACE ---
+let allRepreData = [];
 
-    if (!clenyInput || !mistoInput) return;
-
-    // Kontrola povinných polí
-    if (!clenyInput.value.trim() || !mistoInput.value.trim()) {
-        alert("Prosím vyplňte členy týmu a místo lokality!");
-        return;
-    }
-
-    btn.disabled = true;
-    status.style.color = "#333";
-    status.innerText = "⏳ Ukládám záznam...";
-
-    const payload = {
-        cleny: clenyInput.value,
-        misto: mistoInput.value,
-        jmeno: document.getElementById("repre-jmeno").value,
-        kontakt: document.getElementById("repre-kontakt").value,
-        obor: document.getElementById("repre-obor").value,
-        poznamka: document.getElementById("repre-poznamka").value
-    };
-
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwnqtPqfXMjdj1gH2K-viT9pU_KM9Nh44XeZ1uMzGpXVdUqpwlumVqy_yJndv8OjxugAw/exec";
-
-    try {
-        await fetch(scriptURL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8"
-            },
-            body: JSON.stringify(payload)
-        });
-
-        status.style.color = "green";
-        status.innerText = "✅ Záznam byl úspěšně uložen do Google Tabulky!";
-        document.getElementById("repre-form").reset();
-    } catch (err) {
-        status.style.color = "red";
-        status.innerText = "❌ Chyba při uložení: " + err.message;
-    } finally {
-        btn.disabled = false;
-    }
-}
-
-let allRepreData = []; // Globální proměnná pro ukládání načtených dat
-
-// 1. Odeslání nového záznamu
 async function submitRepreData() {
     const clenyInput = document.getElementById("repre-cleny");
     const mistoInput = document.getElementById("repre-misto");
@@ -228,7 +188,6 @@ async function submitRepreData() {
         status.innerText = "✅ Záznam byl úspěšně uložen do Google Tabulky!";
         document.getElementById("repre-form").reset();
         
-        // Obnovíme tabulku po 1.5 sekundě
         setTimeout(loadRepreData, 1500);
     } catch (err) {
         status.style.color = "red";
@@ -238,7 +197,6 @@ async function submitRepreData() {
     }
 }
 
-// 2. Načtení dat z Google Sheets
 async function loadRepreData() {
     const tbody = document.getElementById("repre-table-body");
     if (!tbody) return;
@@ -250,13 +208,12 @@ async function loadRepreData() {
     try {
         const response = await fetch(scriptURL);
         allRepreData = await response.json();
-        filterRepreTable(); // Vykreslení dat
+        filterRepreTable();
     } catch (err) {
         tbody.innerHTML = '<tr><td colspan="7" style="padding: 15px; text-align: center; color: red;">❌ Chyba při načítání dat. Zkontrolujte připojení.</td></tr>';
     }
 }
 
-// 3. Filtrování, vyhledávání a řazení dat v tabulce
 function filterRepreTable() {
     const tbody = document.getElementById("repre-table-body");
     if (!tbody || !allRepreData) return;
@@ -265,7 +222,6 @@ function filterRepreTable() {
     const ratingFilter = document.getElementById("repre-filter-rating")?.value || "all";
     const sortBy = document.getElementById("repre-sort")?.value || "date-desc";
 
-    // Filtrování dat
     let filtered = allRepreData.filter(item => {
         const matchesSearch = !searchValue || 
             String(item.jmeno || "").toLowerCase().includes(searchValue) ||
@@ -274,14 +230,12 @@ function filterRepreTable() {
             String(item.obor || "").toLowerCase().includes(searchValue) ||
             String(item.poznamka || "").toLowerCase().includes(searchValue);
 
-        // Převedení obou hodnot na řetězec pro spolehlivé porovnání
         const itemRating = String(item.hodnoceni).trim();
         const matchesRating = ratingFilter === "all" || itemRating === String(ratingFilter);
 
         return matchesSearch && matchesRating;
     });
 
-    // Řazení dat
     filtered.sort((a, b) => {
         if (sortBy === "name-asc") return String(a.jmeno || "").localeCompare(String(b.jmeno || ""));
         if (sortBy === "name-desc") return String(b.jmeno || "").localeCompare(String(a.jmeno || ""));
@@ -289,7 +243,6 @@ function filterRepreTable() {
         return 0;
     });
 
-    // Vykreslení do tabulky
     if (filtered.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" style="padding: 15px; text-align: center; color: #888;">Žádné záznamy neodpovídají filtru.</td></tr>';
         return;
@@ -319,5 +272,11 @@ function filterRepreTable() {
     }).join("");
 }
 
-// Automatické načtení dat při přechodu do sekce reprezentace
-// (zavolejte loadRepreData() uvnitř vaší existující funkce loadSection('reprezentace'))
+// Pomocná funkce pro vygenerování SHA-256 hashe z textového řetězce
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+} 
