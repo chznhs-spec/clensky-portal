@@ -174,37 +174,9 @@ function nextSlide() {
     setTimeout(nextSlide, 5000);
 }
 
-// --- START TLACITKO ---
-document.getElementById('start-btn').addEventListener('click', () => {
-    document.getElementById('start-screen').classList.add('hidden');
-    const audio = document.getElementById('bg-music');
-    audio.volume = 1.0;
-    audio.play();
-
-    // Spustí Matrix intro, které pak samo nastartuje slajdy (funkci nextSlide)
-    runMatrix();
-});
-
-// --- ODCHYTĚNÍ STISKU TLAČÍTKA VSTOUPIT ---
-document.getElementById('login-form').addEventListener('submit', (e) => {
-    e.preventDefault(); // Zabrání znovunačtení stránky (nesmírně důležité!)
-    
-    // Schová falešné přihlašovací okno a odkryje plátno pro chaos
-    document.getElementById('login-container').classList.add('hidden');
-    slideContainer.classList.remove('hidden');
-
-    // Spustí hudbu
-    const audio = document.getElementById('bg-music');
-    audio.volume = 1.0;
-    
-    // Catch pro případ, že by prohlížeč blokoval autoplay zvuku
-    audio.play().catch(err => alert("Klikni kamkoliv na obrazovku pro spuštění zvuku!"));
-
-    // Spustí Matrix intro, které automaticky přejde do pekla slajdů
-    runMatrix();
-});
-
-// --- JEDINÝ POVOLENÝ SPOUŠTĚČ NA KONCI SCRIPT.JS ---
+// ==========================================
+// --- JEDINÝ POVOLENÝ SPOUŠTĚČ NA KONCI ---
+// ==========================================
 let started = false;
 
 document.getElementById('login-form').addEventListener('submit', (e) => {
@@ -218,13 +190,13 @@ document.getElementById('login-form').addEventListener('submit', (e) => {
     document.getElementById('login-container').classList.add('hidden');
     slideContainer.classList.remove('hidden');
 
-    // 2. Spustí hudbu
+    // 2. Spustí hudbu s ošetřením pro Chrome
     const audio = document.getElementById('bg-music');
     audio.volume = 1.0;
     audio.play().catch(error => {
-        console.log("Autoplay zablokován, pokračujeme.");
+        console.log("Autoplay zablokován prohlížečem, pokračujeme bez audia.");
     });
 
-    // 3. Spustí Matrix intro (POUZE JEDNOU)
+    // 3. Spustí Matrix intro přesně 1x
     runMatrix();
 });
