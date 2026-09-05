@@ -1,0 +1,185 @@
+/* ==========================================================================
+   RESET A ZÁKLADNÍ VZHLED
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    font-family: "Tahoma", "Verdana", "Segoe UI", Arial, sans-serif;
+    background-color: #000;
+}
+
+.hidden { 
+    display: none !important; 
+}
+
+/* ==========================================================================
+   RETRO OFFICE 2007 / SERVER KAMUFLÁŽ (LOGIN SCREEN)
+   ========================================================================== */
+#login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background: radial-gradient(circle, #e2ecf7 0%, #8ca4c4 100%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+}
+
+.window {
+    background-color: #f6f9fc;
+    border: 2px solid #6b8cbd;
+    box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.4);
+    border-radius: 4px 4px 0px 0px;
+}
+
+.login-window {
+    width: 480px;
+}
+
+.window-header {
+    background: linear-gradient(to bottom, #7ba4e0 0%, #4a77b4 50%, #315b9c 51%, #4572b2 100%);
+    color: #ffffff;
+    padding: 6px 10px;
+    font-weight: bold;
+    font-size: 9.5pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.6);
+    border-bottom: 1px solid #244273;
+}
+
+.window-header .title {
+    flex-grow: 1;
+    margin-left: 8px;
+    letter-spacing: 0.5px;
+}
+
+.window-controls .control-btn {
+    background: linear-gradient(to bottom, #ffffff 0%, #e0e0e0 100%);
+    border: 1px solid #707070;
+    color: #000000;
+    font-weight: bold;
+    font-size: 8pt;
+    padding: 1px 6px;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-left: 2px;
+}
+.window-controls .control-btn:hover {
+    background: #ffd56b;
+    border-color: #cb9925;
+}
+
+.window-body {
+    padding: 18px;
+}
+
+.window-footer {
+    background-color: #e9f0f8;
+    border-top: 1px solid #a3bad9;
+    padding: 4px 10px;
+    font-size: 8.5pt;
+    color: #445566;
+    display: flex;
+    justify-content: space-between;
+}
+
+.login-logo-section {
+    text-align: center;
+    padding: 5px 0 10px 0;
+}
+
+.logo-text {
+    font-family: "Times New Roman", Times, Georgia, serif;
+    font-size: 22pt;
+    font-weight: bold;
+    color: #1e395b;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 0px #ffffff;
+}
+
+.logo-sub {
+    font-size: 8.5pt;
+    color: #4f6888;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-top: 4px;
+    letter-spacing: 1.5px;
+}
+
+.office-hr {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, rgba(0,0,0,0), #8ca4c4 50%, rgba(0,0,0,0));
+    margin: 15px 0;
+}
+
+.login-instruction {
+    font-size: 10pt;
+    color: #334455;
+    line-height: 1.5;
+    margin-bottom: 22px;
+    background-color: #fffcd1;
+    border: 1px solid #dca842;
+    padding: 12px;
+    border-radius: 2px;
+    text-align: center;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: center; /* Vycentruje tlačítko */
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.office-btn {
+    padding: 8px 30px;
+    font-size: 11pt;
+    font-family: inherit;
+    border-radius: 3px;
+    cursor: pointer;
+    box-shadow: inset 0px 1px 0px #ffffff, 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.office-btn.btn-primary {
+    font-weight: bold;
+    border: 1px solid #355b8c;
+    background: linear-gradient(to bottom, #e4f0ff 0%, #cbdffd 50%, #a3c4f7 51%, #bccbf7 100%);
+    color: #1e395b;
+}
+
+.office-btn.btn-primary:hover {
+    background: linear-gradient(to bottom, #ffebd0 0%, #ffc666 50%, #ffaa15 51%, #ffd280 100%);
+    border-color: #cc8000;
+}
+
+/* ==========================================================================
+   BRAIN ROT ENGINE STYLY (CHAOS PLÁTNO)
+   ========================================================================== */
+#slide-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; display: flex; justify-content: center; align-items: center; background-color: #000; }
+.matrix-text { color: #00ff00; font-size: 3.5rem; font-weight: bold; font-family: 'Courier New', monospace; text-shadow: 0 0 10px #00ff00; white-space: pre-wrap; text-align: center; padding: 20px; }
+.grid-container { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); width: 100vw; height: 100vh; gap: 0; }
+.grid-cell { width: 100%; height: 100%; overflow: hidden; background-color: black; border: 2px solid #333; display: flex; justify-content: center; align-items: center; }
+.grid-img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transform: scale(0); transition: all 0.1s ease-in-out; }
+.grid-img.visible { opacity: 1; transform: scale(1); }
+.epilepsy-bg { animation: flashBg 0.1s infinite; }
+@keyframes flashBg { 0% { background-color: red; } 20% { background-color: yellow; } 40% { background-color: lime; } 60% { background-color: cyan; } 80% { background-color: magenta; } 100% { background-color: white; } }
+.absolute-chaos { position: absolute; object-fit: contain; z-index: 50; pointer-events: none; }
+.spin-fast { animation: spin 0.5s linear infinite; }
+.shake-fast { animation: shake 0.2s infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+@keyframes shake { 0% { transform: translate(10px, 10px) rotate(0deg); } 50% { transform: translate(-10px, -10px) rotate(15deg); } 100% { transform: translate(10px, -10px) rotate(-15deg); } }
+#pulsing-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 7rem; font-family: 'Courier New', monospace; font-weight: bold; color: #fff; text-shadow: 10px 10px 0 #000, -10px -10px 0 #ff0000; z-index: 9999; text-align: center; line-height: 1.1; pointer-events: none; animation: massivePump 0.38s infinite alternate ease-in-out; }
+@keyframes massivePump { 0% { transform: translate(-50%, -50%) scale(0.8) rotate(-5deg); } 100% { transform: translate(-50%, -50%) scale(1.4) rotate(5deg); } }

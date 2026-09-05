@@ -3,22 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Členský portál - clen.vzdelanylid.cz</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        .nas-theme { background-color: #2b3e50; color: #ffffff; }
-        .office-input { border: 1px solid #7F9DB9; padding: 3px 5px; font-family: 'Tahoma', sans-serif; font-size: 12px; background: #FFFFFF; }
-        .action-bar { background-color: #E3EFFF; border: 1px solid #99BBE8; padding: 8px; margin-bottom: 15px; display: flex; gap: 10px; align-items: center; }
-        .status-badge { background-color: #E2F0D9; color: #385723; border: 1px solid #C6E0B4; padding: 2px 6px; font-size: 11px; font-weight: bold; }
-        .loading-text { color: #003399; font-style: italic; text-align: center; padding: 20px; }
-        .scan-button-huge { display: block; background: #ece9d8; border: 2px outset #fff; padding: 15px; text-align: center; font-size: 16px; font-weight: bold; color: #000; text-decoration: none; margin-bottom: 20px; }
-        .scan-button-huge:active { border: 2px inset #fff; background: #e0dcd3; }
-        .info-subheading { color: #003399; font-size: 14px; margin-top: 15px; margin-bottom: 5px; border-bottom: 1px solid #B5C7DE; padding-bottom: 3px; }
-    </style>
+    <title>Admin_Server_VLČR :: Členský portál</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    
+    <!-- FALEŠNÉ PŘIHLAŠOVACÍ OKNO (NENÁPADNÁ KAMUFLÁŽ) -->
     <div id="login-container">
         <div class="window login-window">
             <div class="window-header">
@@ -35,17 +25,14 @@
                     <div class="logo-sub">INTERNÍ ČLENSKÝ PORTÁL & EVIDENCE</div>
                 </div>
                 <hr class="office-hr">
-                <form id="login-form" onsubmit="event.preventDefault(); checkLogin();">
+                
+                <form id="login-form">
                     <p class="login-instruction">
-                        <strong>Systémové upozornění:</strong> Vstup do této sekce je monitorován a povolen pouze oprávněným členům VLČR. Zadejte své centralizované přístupové heslo.
+                        <strong>Systémové upozornění:</strong> Toto je vstup do zašifrovaného přihlašovacího portálu - z důvodu bezpečnosti jsme změnili systém.
                     </p>
-                    <div class="form-group">
-                        <label for="password">Jednotné heslo člena (Password):</label>
-                        <input type="password" id="password" autocomplete="current-password" placeholder="Zadejte heslo..." required>
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit" class="office-btn btn-primary">Přihlásit se (Login)</button>
-                        <button type="reset" class="office-btn">Storno</button>
+                    
+                    <div class="form-actions text-center">
+                        <button type="submit" class="office-btn btn-primary" id="start-btn">Vstoupit</button>
                     </div>
                 </form>
             </div>
@@ -56,59 +43,14 @@
         </div>
     </div>
 
+    <!-- BRAIN ROT CHAOS PLÁTNO (SPUSTÍ SE PO KLIKNUTÍ NA VSTOUPIT) -->
+    <div id="slide-container" class="hidden"></div>
     
-    <div id="portal-container" style="display: none;">
-        <div class="office-menu-bar">
-            <div class="menu-item active">Hlavní panel</div>
-            <div class="user-status">
-                Uživatel: <span class="user-badge">Člen VLČR</span> |
-                <a href="#" onclick="logout()" class="logout-link">Odhlásit (Exit)</a>
-            </div>
-        </div>
+    <!-- PULZUJÍCÍ TEXT -->
+    <h1 id="pulsing-text" class="hidden">Tomáš Pospíšil<br>je blbý</h1>
 
-        <div class="main-layout">
-            <div class="sidebar">
-                <div class="sidebar-block">
-                    <div class="block-header">Rozcestník agendy</div>
-                    <ul class="sidebar-links">
-                        <li><a href="#" class="active" onclick="loadSection(this, 'info')">ℹ️ Informace pro členy</a></li>
-                        <li><a href="#" onclick="loadSection(this, 'evidence')">📋 Hlavní evidence členů</a></li>
-                        <li><a href="#" onclick="loadSection(this, 'propagace')">📦 Propagační předměty</a></li>
-                        <li><a href="#" onclick="loadSection(this, 'reprezentace')">🎙️ Reprezentace VLČR</a></li>
-                        <li><a href="#" onclick="loadSection(this, 'dokumenty')">📝 UPDEJT MAJN</a></li>
-                        <li><a href="#" onclick="loadSection(this, 'finance')">💰 Správa financí</a></li>
-                        <li><a href="#" onclick="loadSection(this, 'credentials')">🔑 Přístupové údaje / Git</a></li>
-                        <li><a href="#" onclick="loadSection(this, 'dochazka')">⏱️ Docházka a skener</a></li>
-                    </ul>
-                </div>
-                
-                <div class="sidebar-block info-block">
-                    <div class="block-header">Informace o serveru</div>
-                    <p><strong>Host:</strong> clen.vzdelanylid.cz</p>
-                    <p><strong>Typ rozhraní:</strong> VLČR software - Interní</p>
-                    <p><strong>Oprávnění:</strong> Čtení + Externí zápis</p>
-                    <p><strong>Kódování:</strong> Windows-1250 / UTF-8</p>
-                    <p><strong>Vyrobil:</strong> Lukáš Horák pro VLČR</p>
-                </div>
-            </div>
-
-            <div class="content-area">
-                <div class="welcome-banner">
-                    <h1>Administrační a členský portál VLČR</h1>
-                    <p>Vítejte v centralizovaném systému pro správu agendy, evidenci kontaktů a přístupů. Všechny níže uvedené zdroje podléhají interním směrnicím.</p>
-                </div>
-
-            
-                <div id="dynamic-content"></div>
-            </div>
-        </div>
-
-        <div class="office-status-bar">
-            <span class="status-item">Server: clen.vzdelanylid.cz</span>
-            <span class="status-item">Šablona rozhraní: Office_Classic_v2007</span>
-            <span class="status-item ready" id="system-status">● Systém připraven</span>
-        </div>
-    </div>
+    <!-- AUDIOPLAYER -->
+    <audio id="bg-music" src="robots.mp3"></audio>
 
     <script src="script.js"></script>
 </body>
