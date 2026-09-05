@@ -203,3 +203,28 @@ document.getElementById('login-form').addEventListener('submit', (e) => {
     // Spustí Matrix intro, které automaticky přejde do pekla slajdů
     runMatrix();
 });
+
+// --- JEDINÝ POVOLENÝ SPOUŠTĚČ NA KONCI SCRIPT.JS ---
+let started = false;
+
+document.getElementById('login-form').addEventListener('submit', (e) => {
+    e.preventDefault(); // Zastaví obnovení stránky
+    
+    // Pojistka proti vícenásobnému spuštění
+    if (started) return;
+    started = true;
+    
+    // 1. Schová přihlášení a odkryje plátno
+    document.getElementById('login-container').classList.add('hidden');
+    slideContainer.classList.remove('hidden');
+
+    // 2. Spustí hudbu
+    const audio = document.getElementById('bg-music');
+    audio.volume = 1.0;
+    audio.play().catch(error => {
+        console.log("Autoplay zablokován, pokračujeme.");
+    });
+
+    // 3. Spustí Matrix intro (POUZE JEDNOU)
+    runMatrix();
+});
